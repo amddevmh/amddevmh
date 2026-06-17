@@ -52,3 +52,5 @@ Arabic - English - German - French
 ### Short Bio
 
 Founder @ Voice Interview AI | Senior Full-Stack Engineer | React, TypeScript, AI voice products, Supabase, AWS
+
+<!-- profile-readme-refresh -->
