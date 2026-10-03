@@ -1,7 +1,9 @@
 import { expect, type Page } from '@playwright/test'
 
-export const SITE = 'http://localhost:3000'
-export const BO = 'http://localhost:3001'
+// Par défaut : builds locaux. Pour viser un environnement déployé (ex. staging Railway) :
+// E2E_SITE_URL=https://… E2E_BACKOFFICE_URL=https://… pnpm test:e2e
+export const SITE = process.env.E2E_SITE_URL ?? 'http://localhost:3000'
+export const BO = process.env.E2E_BACKOFFICE_URL ?? 'http://localhost:3001'
 export const PASSWORD = 'HiTravel2026!'
 
 export async function staffLogin(page: Page, email: string) {

@@ -115,24 +115,41 @@ Run the end-to-end tests after `pnpm build` and on a freshly reset database; the
 
 The two supplier names were inferred from hotel image URLs on hitravel.tn; both connectors are placeholders until HI Travel shares the API documentation (API01). Failure modes can be demonstrated from **Connexions et imports → API hôtels** (scenario: down, slow, timeout on booking, price change).
 
-## Deploying to Supabase (org `tigbhjmccxqeqvdlpmgd`)
+## Environments (Railway + Supabase)
 
-The demo seed is **never** pushed to a remote project. From a machine where the CLI is logged in (`supabase login`) or `SUPABASE_ACCESS_TOKEN` is set:
+| Environment | Public site | Back office | Supabase project | Data |
+|---|---|---|---|---|
+| **staging** | https://site-staging-785b.up.railway.app | https://backoffice-staging-635b.up.railway.app | `hi-travel-staging` (`icvgzesvolslzqitxndj`, eu-central-1) | demo seed (logins above) |
+| **production** | https://site-production-8b00.up.railway.app | https://backoffice-production-b4af.up.railway.app | `hi-travel-main` (`dszbhmnbgwesrkznqcfy`, eu-central-1) | empty: create the first account with `scripts/create-admin.mjs` |
+
+Railway project `hi-travel` has two services, `site` and `backoffice`, in the `staging` and `production` environments, in region europe-west4. Both services build from the shared root `Dockerfile` (Next.js standalone output); the `APP` service variable selects the app.
+
+Variables per service and environment: `APP`, `PORT=3000`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_BACKOFFICE_URL`, `NEXT_PUBLIC_AUTH_COOKIE_NAME` (`sb-hi-site-auth` / `sb-hi-bo-auth`), `PAYMENT_WEBHOOK_SECRET`, `INTEGRATIONS_MODE=mock`. `NEXT_PUBLIC_*` values are baked in at build time, so redeploy after changing them.
 
 ```bash
 cd hi-travel
-npx supabase projects list                       # is there already a project for HI Travel?
-# if not (this creates a billable project; pick the region, e.g. eu-central-1):
-npx supabase projects create hi-travel --org-id tigbhjmccxqeqvdlpmgd --region eu-central-1 --db-password '<strong password>'
-npx supabase link --project-ref <project-ref>
-npx supabase db push                             # applies supabase/migrations
-SUPABASE_URL=https://<project-ref>.supabase.co SUPABASE_SERVICE_ROLE_KEY=<service key> \
-  node scripts/create-admin.mjs direction@hitravel.tn "Prénom Nom"   # first direction account
+railway link                                                     # project hi-travel
+railway up --service site --environment staging --ci             # deploy the current checkout
+railway up --service backoffice --environment staging --ci
+railway logs --service site --environment staging
 ```
 
-Then in the Supabase dashboard → Authentication → URL configuration, set the site URL and add `https://<site-domain>/**` and `https://<backoffice-domain>/**` to the redirect URLs (needed for password-reset links).
+Database migrations: `supabase link --project-ref <ref> && supabase db push`. Where the Postgres port is unreachable, the HTTPS fallback is `SUPABASE_ACCESS_TOKEN=… node scripts/apply-remote-sql.mjs <ref>` (add `--seed` for demo data, staging only). Supabase Auth's site URL and redirect allow-list already point at the Railway domains. If you add a custom domain, update both Railway's `NEXT_PUBLIC_*_URL` variables and Supabase Auth → URL configuration.
 
-Each app needs these environment variables (see `apps/*/.env.example`): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server only), `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_BACKOFFICE_URL`, `PAYMENT_WEBHOOK_SECRET`, and `NEXT_PUBLIC_AUTH_COOKIE_NAME` (different per app, so staff and client sessions never mix).
+To check a deployed environment without a browser (every screen per role, access refusals, client isolation):
+
+```bash
+SITE=<site url> BO=<back-office url> SUPABASE_URL=https://<ref>.supabase.co SUPABASE_ANON_KEY=<anon key> node scripts/smoke-deployed.mjs
+```
+
+The Playwright suite can also target a deployed environment with `E2E_SITE_URL` / `E2E_BACKOFFICE_URL`. `02-journey` creates data and pays online, so don't run it against staging if you want to keep the demo state.
+
+First production account:
+
+```bash
+SUPABASE_URL=https://dszbhmnbgwesrkznqcfy.supabase.co SUPABASE_SERVICE_ROLE_KEY=<service key> \
+  node scripts/create-admin.mjs direction@hitravel.tn "Prénom Nom"
+```
 
 ## To validate with HI Travel before go-live
 

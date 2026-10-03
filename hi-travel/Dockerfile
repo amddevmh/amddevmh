@@ -24,6 +24,7 @@ COPY packages/db/package.json packages/db/
 COPY packages/integrations/package.json packages/integrations/
 COPY packages/ui/package.json packages/ui/
 RUN pnpm install --frozen-lockfile --filter "@hi/${APP}..."
+COPY tsconfig.base.json ./
 COPY packages ./packages
 COPY apps/${APP} ./apps/${APP}
 RUN test -n "$APP" && pnpm --filter "@hi/${APP}" build
