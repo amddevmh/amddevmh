@@ -21,7 +21,7 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
   // Seuls les comptes rattachés à une fiche client accèdent à l'espace client
   const { data: account } = await supabase.from('client_accounts').select('client_id').eq('user_id', data.user.id).maybeSingle()
   if (!account) {
-    await supabase.auth.signOut()
+    await supabase.auth.signOut({ scope: 'local' })
     return { status: 'error', error: p.notClient }
   }
   redirect(safeNext(formData.get('next')))
@@ -29,7 +29,7 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
 
 export async function logout() {
   const supabase = await createSessionClient()
-  await supabase.auth.signOut()
+  await supabase.auth.signOut({ scope: 'local' })
   redirect('/espace-client/connexion')
 }
 

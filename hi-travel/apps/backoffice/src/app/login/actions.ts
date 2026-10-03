@@ -18,7 +18,7 @@ export async function signIn(_: ActionState, formData: FormData): Promise<Action
   if (error || !data.user) return { ok: false, error: 'Identifiants incorrects' }
   const { data: profile } = await supabase.from('staff_profiles').select('active').eq('id', data.user.id).maybeSingle()
   if (!profile?.active) {
-    await supabase.auth.signOut()
+    await supabase.auth.signOut({ scope: 'local' })
     return { ok: false, error: 'Ce compte n’a pas accès au back office' }
   }
   const next = String(formData.get('next') ?? '/')
@@ -27,6 +27,6 @@ export async function signIn(_: ActionState, formData: FormData): Promise<Action
 
 export async function signOut() {
   const supabase = await createClient()
-  await supabase.auth.signOut()
+  await supabase.auth.signOut({ scope: 'local' })
   redirect('/login')
 }
