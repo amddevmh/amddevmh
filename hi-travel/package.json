@@ -14,13 +14,17 @@
     "db:test": "supabase test db",
     "db:types": "supabase gen types typescript --local --schema public > packages/db/src/database.types.ts",
     "db:push": "supabase db push",
-    "env:local": "node scripts/write-local-env.mjs"
+    "env:local": "node scripts/write-local-env.mjs",
+    "test:db": "supabase test db",
+    "test:e2e": "playwright test",
+    "create-admin": "node scripts/create-admin.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "supabase": "^2.119.0",
     "turbo": "^2.11.7",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "@supabase/supabase-js": "^2.117.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
