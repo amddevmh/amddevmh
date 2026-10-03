@@ -218,8 +218,7 @@ language plpgsql security definer set search_path = public
 as $$
 begin
   if new.status = 'published' and (tg_op = 'INSERT' or old.status is distinct from 'published') then
-    if not (coalesce(auth.role(), '') = 'service_role' or current_user in ('postgres', 'supabase_admin')
-            or public.has_perm('site', 'validate')) then
+    if not (public.is_internal_context() or public.has_perm('site', 'validate')) then
       raise exception 'Publication réservée à un utilisateur habilité' using errcode = '42501';
     end if;
     new.published_by := coalesce(auth.uid(), new.published_by);

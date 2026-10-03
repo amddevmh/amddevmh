@@ -295,7 +295,7 @@ begin
   end if;
 
   -- Contact déjà connu : rattachement si e-mail ET téléphone concordent, sinon signalement sans fusion
-  select array_agg(d.id) into v_dups from public.find_client_duplicates(v_email, v_phone, null) d;
+  v_dups := public._client_duplicate_ids(v_email, v_phone);
   select array_agg(c.id) into v_strong from public.clients c
    where c.merged_into_id is null and v_email is not null and lower(c.email) = v_email
      and v_phone is not null

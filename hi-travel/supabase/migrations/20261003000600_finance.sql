@@ -1069,7 +1069,7 @@ declare
   v_pay public.payments;
   v_event_row uuid;
 begin
-  if coalesce(auth.role(), '') <> 'service_role' and current_user not in ('postgres', 'supabase_admin') then
+  if not public.is_internal_context() then
     raise exception 'Réservé au serveur' using errcode = '42501';
   end if;
   insert into public.payment_webhook_events (provider, event_id, event_type, payload, signature_valid)
@@ -1168,8 +1168,7 @@ create or replace function public.can_see_margins()
 returns boolean
 language sql stable security definer set search_path = public
 as $$
-  select coalesce(auth.role(), '') = 'service_role' or current_user in ('postgres', 'supabase_admin')
-         or public.has_perm('margins', 'read')
+  select public.is_internal_context() or public.has_perm('margins', 'read')
 $$;
 
 create view public.dossier_financials

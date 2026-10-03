@@ -30,8 +30,7 @@ as $$
          ) as match_reason
   from public.clients c
   where c.merged_into_id is null
-    and (public.has_perm('crm', 'read') or coalesce(auth.role(), '') = 'service_role'
-         or current_user in ('postgres', 'supabase_admin') or auth.uid() is null)
+    and (public.is_internal_context() or public.has_perm('crm', 'read'))
     and (
       (p_email is not null and lower(c.email) = lower(p_email))
       or (nullif(regexp_replace(coalesce(p_phone, ''), '\D', '', 'g'), '') is not null
@@ -40,8 +39,20 @@ as $$
     )
   limit 10
 $$;
--- auth.uid() is null couvre l'appel interne depuis submit_site_request (anonyme) ; l'exécution directe par anon est révoquée.
 revoke execute on function public.find_client_duplicates(text, text, text) from public, anon;
+
+-- Variante interne sans contrôle de droits, réservée aux fonctions propriétaires (ex. submit_site_request)
+create or replace function public._client_duplicate_ids(p_email text, p_phone text)
+returns uuid[]
+language sql stable security definer set search_path = public
+as $$
+  select array_agg(c.id) from public.clients c
+   where c.merged_into_id is null
+     and ((p_email is not null and lower(c.email) = lower(p_email))
+       or (nullif(regexp_replace(coalesce(p_phone, ''), '\D', '', 'g'), '') is not null
+           and right(regexp_replace(coalesce(c.phone, ''), '\D', '', 'g'), 8) = right(regexp_replace(p_phone, '\D', '', 'g'), 8)))
+$$;
+revoke execute on function public._client_duplicate_ids(text, text) from public, anon, authenticated;
 
 -- Montant encaissé : visible au personnel ou au client propriétaire du dossier
 create or replace function public.dossier_paid_amount(p_dossier_id uuid)
@@ -55,12 +66,11 @@ as $$
    where coalesce(pa.dossier_id, i.dossier_id) = p_dossier_id
      and p.client_id is not null
      and p.status = 'validated'
-     and (public.is_staff() or coalesce(auth.role(), '') = 'service_role' or current_user in ('postgres', 'supabase_admin')
+     and (public.is_staff() or public.is_internal_context()
           or exists (select 1 from public.dossiers d where d.id = p_dossier_id and d.client_id = public.portal_client_id()))
 $$;
 
--- Numérotation : uniquement via les fonctions métier (pas d'appel direct client)
-revoke execute on function public.next_number(text, date) from authenticated;
+-- Numérotation : nécessaire aux valeurs par défaut des références (devis, dossiers, demandes)
 
 -- Vue client : situation financière d'un dossier sans coûts ni marges
 create view public.portal_dossier_balances

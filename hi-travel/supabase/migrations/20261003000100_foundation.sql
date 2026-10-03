@@ -69,6 +69,17 @@ as $$
   )
 $$;
 
+-- Contexte interne : migrations, seed, tâches planifiées (aucun JWT) ou clé service côté serveur.
+-- NB : dans une fonction SECURITY DEFINER, current_user vaut toujours le propriétaire :
+-- il ne peut donc pas servir à reconnaître l'appelant.
+create or replace function public.is_internal_context()
+returns boolean
+language sql stable
+as $$
+  select coalesce(auth.role(), '') = 'service_role'
+      or (auth.role() is null and auth.uid() is null)
+$$;
+
 -- Contrôle serveur utilisé par toutes les fonctions métier
 create or replace function public.require_perm(p_module text, p_action public.perm_action)
 returns void
@@ -76,7 +87,7 @@ language plpgsql stable security definer set search_path = public
 as $$
 begin
   -- Le rôle service (traitements serveur internes, webhooks) est autorisé
-  if coalesce(auth.role(), '') = 'service_role' or current_user in ('postgres', 'supabase_admin') then
+  if public.is_internal_context() then
     return;
   end if;
   if not public.has_perm(p_module, p_action) then
