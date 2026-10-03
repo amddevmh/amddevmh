@@ -13,3 +13,6 @@ supabase/.temp
 next-env.d.ts
 *.tsbuildinfo
 .payment-secret.local
+test-results
+playwright-report
+blob-report
