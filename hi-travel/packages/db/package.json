@@ -1,0 +1,28 @@
+{
+  "name": "@hi/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts",
+    "./browser": "./src/browser.ts",
+    "./admin": "./src/admin.ts",
+    "./types": "./src/database.types.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
+    "server-only": "^0.0.1"
+  },
+  "peerDependencies": {
+    "next": ">=16"
+  },
+  "devDependencies": {
+    "next": "^16.3.8",
+    "typescript": "^5.9.3"
+  }
+}

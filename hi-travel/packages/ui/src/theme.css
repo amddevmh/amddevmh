@@ -1,0 +1,70 @@
+/*
+ * Thème HI Travel — couleurs relevées sur hitravel.tn (feuille de style du site actuel) :
+ *   bleu principal #0f4e9e · bleu nuit #131a47 · orange accent #faad32 · bleu clair #d1e3f0
+ * Polices du site actuel : Poppins (titres) et Roboto (texte).
+ * Importer après `@import "tailwindcss";` dans chaque application.
+ */
+
+@theme {
+  --font-sans: var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-poppins), var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #eef5fc;
+  --color-brand-100: #d1e3f0;
+  --color-brand-200: #a9c8e6;
+  --color-brand-300: #6f9fd3;
+  --color-brand-400: #3a77bd;
+  --color-brand-500: #0f4e9e;
+  --color-brand-600: #0d4386;
+  --color-brand-700: #0b376d;
+  --color-brand-800: #132a5c;
+  --color-brand-900: #131a47;
+
+  --color-accent-50: #fff7ea;
+  --color-accent-100: #feeacb;
+  --color-accent-300: #fcc871;
+  --color-accent-400: #faad32;
+  --color-accent-500: #f09a12;
+  --color-accent-600: #c97a06;
+  --color-accent-700: #9a5c07;
+
+  --color-sun: #fdc202;
+
+  --color-ink: #212529;
+  --color-muted: #5b6472;
+  --color-line: #e3e8ef;
+  --color-surface: #ffffff;
+  --color-canvas: #f6f8fb;
+
+  --color-danger-50: #fdeeee;
+  --color-danger-600: #c62828;
+  --color-danger-700: #a51f1f;
+  --color-warning-50: #fff5e6;
+  --color-warning-600: #b86e00;
+  --color-success-50: #e9f7ef;
+  --color-success-600: #1e7d45;
+  --color-info-50: #eaf2fd;
+  --color-info-600: #0f4e9e;
+
+  --radius-card: 0.75rem;
+}
+
+@layer base {
+  html {
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent-400);
+    outline-offset: 2px;
+  }
+  /* Montants alignés */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

@@ -17,11 +17,17 @@
     "env:local": "node scripts/write-local-env.mjs"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "supabase": "^2.119.0",
     "turbo": "^2.11.7",
     "typescript": "^5.9.3"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["supabase", "sharp", "esbuild", "unrs-resolver"]
+    "onlyBuiltDependencies": [
+      "supabase",
+      "sharp",
+      "esbuild",
+      "unrs-resolver"
+    ]
   }
 }
