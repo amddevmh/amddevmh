@@ -48,6 +48,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "alerts_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "alerts_owner_id_fkey"
       columns: ["owner_id"]
 isOneToOne: false
@@ -254,6 +260,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "cost_allocations_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "cost_allocations_service_id_fkey"
       columns: ["service_id"]
 isOneToOne: false
@@ -320,6 +332,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "departure_holds_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "departure_holds_lead_id_fkey"
       columns: ["lead_id"]
@@ -439,6 +457,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "documents_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "documents_service_id_fkey"
       columns: ["service_id"]
 isOneToOne: false
@@ -488,6 +512,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "dossier_checks_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "dossier_checks_owner_id_fkey"
       columns: ["owner_id"]
 isOneToOne: false
@@ -536,6 +566,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "dossier_travellers_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "dossier_travellers_traveller_id_fkey"
       columns: ["traveller_id"]
@@ -652,6 +688,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "event_participants_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     }
                   ]
                 },"external_deadlines": {
@@ -683,6 +725,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "external_deadlines_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "external_deadlines_service_id_fkey"
       columns: ["service_id"]
@@ -808,6 +856,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "hotel_booking_requests_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "hotel_booking_requests_service_id_fkey"
       columns: ["service_id"]
@@ -945,6 +999,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "import_rows_target_dossier_id_fkey"
+      columns: ["target_dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     }
                   ]
                 },"import_templates": {
@@ -989,6 +1049,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "incidents_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "incidents_owner_id_fkey"
       columns: ["owner_id"]
@@ -1063,6 +1129,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "interactions_dossier_fk"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "interactions_lead_id_fkey"
       columns: ["lead_id"]
@@ -1162,6 +1234,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "invoices_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "invoices_original_invoice_id_fkey"
       columns: ["original_invoice_id"]
 isOneToOne: false
@@ -1259,6 +1337,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "journal_lines_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "journal_lines_entry_id_fkey"
       columns: ["entry_id"]
@@ -1478,6 +1562,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "outbox_messages_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "outbox_messages_lead_id_fkey"
       columns: ["lead_id"]
 isOneToOne: false
@@ -1515,6 +1605,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "payment_allocations_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "payment_allocations_invoice_id_fkey"
       columns: ["invoice_id"]
 isOneToOne: false
@@ -1537,6 +1633,12 @@ isOneToOne: false
       columns: ["payment_id"]
 isOneToOne: false
       referencedRelation: "payments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payment_allocations_payment_id_fkey"
+      columns: ["payment_id"]
+isOneToOne: false
+      referencedRelation: "portal_payments"
       referencedColumns: ["id"]
     },{
       foreignKeyName: "payment_allocations_supplier_invoice_fk"
@@ -1594,6 +1696,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "payment_intents_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "payment_intents_payment_id_fkey"
       columns: ["payment_id"]
 isOneToOne: false
@@ -1604,6 +1712,12 @@ isOneToOne: false
       columns: ["payment_id"]
 isOneToOne: false
       referencedRelation: "payments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payment_intents_payment_id_fkey"
+      columns: ["payment_id"]
+isOneToOne: false
+      referencedRelation: "portal_payments"
       referencedColumns: ["id"]
     },{
       foreignKeyName: "payment_intents_schedule_item_id_fkey"
@@ -1642,6 +1756,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "payment_schedule_items_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     }
                   ]
                 },"payment_webhook_events": {
@@ -1715,6 +1835,12 @@ isOneToOne: false
       columns: ["reversal_of_id"]
 isOneToOne: false
       referencedRelation: "payments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_reversal_of_id_fkey"
+      columns: ["reversal_of_id"]
+isOneToOne: false
+      referencedRelation: "portal_payments"
       referencedColumns: ["id"]
     },{
       foreignKeyName: "payments_supplier_id_fkey"
@@ -1933,6 +2059,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "services_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "services_hotel_id_fkey"
       columns: ["hotel_id"]
 isOneToOne: false
@@ -2145,6 +2277,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "tasks_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "tasks_proof_document_id_fkey"
       columns: ["proof_document_id"]
 isOneToOne: false
@@ -2287,6 +2425,12 @@ isOneToOne: false
       columns: ["payment_id"]
 isOneToOne: false
       referencedRelation: "payments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "treasury_movements_payment_fk"
+      columns: ["payment_id"]
+isOneToOne: false
+      referencedRelation: "portal_payments"
       referencedColumns: ["id"]
     },{
       foreignKeyName: "treasury_movements_proof_document_id_fkey"
@@ -2435,6 +2579,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "journal_lines_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "journal_lines_supplier_id_fkey"
       columns: ["supplier_id"]
 isOneToOne: false
@@ -2483,6 +2633,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "invoices_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
     }
                   ]
                 },"payment_unallocated": {
@@ -2522,6 +2678,56 @@ isOneToOne: false
                          }
                         Relationships: [
                     
+                  ]
+                },"portal_dossiers": {
+                  Row: {
+                    "activity": Database["public"]['Enums']["activity"] | null,"adults": number | null,"children": number | null,"created_at": string | null,"currency": string | null,"departure_id": string | null,"destination": string | null,"end_date": string | null,"id": string | null,"infants": number | null,"is_omra": boolean | null,"owner_name": string | null,"reference": string | null,"start_date": string | null,"status": Database["public"]['Enums']["dossier_status"] | null,"title": string | null,"total_price": number | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "dossiers_departure_id_fkey"
+      columns: ["departure_id"]
+isOneToOne: false
+      referencedRelation: "departures"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "dossiers_departure_id_fkey"
+      columns: ["departure_id"]
+isOneToOne: false
+      referencedRelation: "site_departures"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"portal_payments": {
+                  Row: {
+                    "allocated": number | null,"amount": number | null,"currency": string | null,"dossier_id": string | null,"id": string | null,"method": Database["public"]['Enums']["payment_method"] | null,"received_at": string | null,"reference": string | null,"status": Database["public"]['Enums']["payment_status"] | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "payment_allocations_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "dossier_financials"
+      referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "payment_allocations_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "dossiers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payment_allocations_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossier_balances"
+      referencedColumns: ["dossier_id"]
+    },{
+      foreignKeyName: "payment_allocations_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"quote_version_totals": {
                   Row: {
@@ -2636,6 +2842,12 @@ isOneToOne: false
       referencedRelation: "portal_dossier_balances"
       referencedColumns: ["dossier_id"]
     },{
+      foreignKeyName: "tasks_dossier_id_fkey"
+      columns: ["dossier_id"]
+isOneToOne: false
+      referencedRelation: "portal_dossiers"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "tasks_proof_document_id_fkey"
       columns: ["proof_document_id"]
 isOneToOne: false
@@ -2665,7 +2877,50 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "accept_quote_version":
+            "_client_duplicate_ids":
+{ Args: { "p_email": string,"p_phone": string }; Returns: (string)[]
+                           },
+"_portal_owned_dossier":
+{ Args: { "p_dossier_id": string }; Returns: {
+              "accepted_version_id": string | null,
+"activity": Database["public"]['Enums']["activity"],
+"adults": number,
+"cancelled_reason": string | null,
+"children": number,
+"client_id": string,
+"created_at": string,
+"currency": string,
+"departure_id": string | null,
+"derogation_at": string | null,
+"derogation_by": string | null,
+"derogation_reason": string | null,
+"destination": string | null,
+"end_date": string | null,
+"financial_close_note": string | null,
+"financial_closed_at": string | null,
+"financial_closed_by": string | null,
+"financial_status": string,
+"id": string,
+"infants": number,
+"is_omra": boolean,
+"lead_id": string | null,
+"notes": string | null,
+"owner_id": string | null,
+"quote_id": string | null,
+"reference": string,
+"start_date": string | null,
+"status": Database["public"]['Enums']["dossier_status"],
+"title": string,
+"total_price": number,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "dossiers"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"accept_quote_version":
 { Args: { "p_note"?: string,"p_version_id": string }; Returns: string
                            },
 "allocate_supplier_invoice":
@@ -2746,6 +3001,9 @@ isOneToOne: false
               "display_name": string,"email": string,"id": string,"match_reason": string,"phone": string
             }[]
                            },
+"flag_hotel_booking_to_verify":
+{ Args: { "p_booking_request_id": string,"p_reason": string }; Returns: string
+                           },
 "generate_departure_checklist":
 { Args: { "p_dossier_id": string }; Returns: number
                            },
@@ -2775,6 +3033,9 @@ isOneToOne: false
 "invoice_credited_amount":
 { Args: { "p_invoice_id": string }; Returns: number
                            },
+"is_internal_context":
+{ Args: Record<PropertyKey, never>; Returns: boolean
+                           },
 "is_staff":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
@@ -2798,8 +3059,50 @@ isOneToOne: false
 "period_is_open":
 { Args: { "p_date": string }; Returns: boolean
                            },
+"portal_attach_payment_session":
+{ Args: { "p_intent_id": string,"p_session_id": string }; Returns: undefined
+                           },
 "portal_client_id":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"portal_create_payment_intent":
+{ Args: { "p_amount": number,"p_dossier_id": string,"p_schedule_item_id": string }; Returns: {
+              "amount": number,
+"client_id": string,
+"created_at": string,
+"created_by": string | null,
+"currency": string,
+"dossier_id": string,
+"id": string,
+"payment_id": string | null,
+"provider": string,
+"provider_session_id": string | null,
+"schedule_item_id": string | null,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "payment_intents"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"portal_dossier_service_summary":
+{ Args: { "p_dossier_id": string }; Returns: {
+              "cancelled": number,"confirmed": number,"on_option": number,"requested": number,"total": number
+            }[]
+                           },
+"portal_notify_upload":
+{ Args: { "p_document_id": string }; Returns: string
+                           },
+"portal_owns_dossier":
+{ Args: { "p_dossier_id": string }; Returns: boolean
+                           },
+"portal_payment_options":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"portal_request_change":
+{ Args: { "p_dossier_id": string,"p_kind": string,"p_message": string }; Returns: Json
                            },
 "post_journal_entry":
 { Args: { "p_entry_id": string }; Returns: string
@@ -2868,8 +3171,14 @@ isOneToOne: false
 "reverse_payment":
 { Args: { "p_payment_id": string,"p_reason": string }; Returns: string
                            },
+"set_app_setting":
+{ Args: { "p_key": string,"p_reason"?: string,"p_value": Json }; Returns: undefined
+                           },
 "set_dossier_status":
 { Args: { "p_dossier_id": string,"p_reason"?: string,"p_status": Database["public"]['Enums']["dossier_status"] }; Returns: undefined
+                           },
+"set_role_permission":
+{ Args: { "p_action": Database["public"]['Enums']["perm_action"],"p_granted": boolean,"p_module": string,"p_reason"?: string,"p_role": Database["public"]['Enums']["app_role"] }; Returns: undefined
                            },
 "submit_site_request":
 { Args: { "p": Json }; Returns: Json

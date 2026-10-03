@@ -1,0 +1,5 @@
+Booking ref,Supplier,Hotel,City,Country,Guests,Rooms,Room type,Board,Check-in,Check-out,Cost,Currency,Status,Agency ref
+BOS-55120,Bosphorus DMC,Hôtel Sultanahmet Center,Istanbul,TR,1,1,Double,LPD,2026-11-14,2026-11-21,300.00,EUR,CONFIRMED,DOS-2026-00001
+BOS-55188,Bosphorus DMC,Hôtel Sultanahmet Center,Istanbul,TR,2,1,Double,LPD,2026-12-19,2026-12-26,320.00,EUR,CONFIRMED,
+AHS-9001,Al Haram Services,Hilton Suites Makkah,La Mecque,SA,4,1,Quadruple,DP,25/02/2027,06/03/2027,5400.00,SAR,ON REQUEST,
+AHS-9002,Al Haram Services,Dar Al Iman InterContinental,Médine,SA,4,1,Quadruple,DP,2027-02-25,2027-02-20,2100.00,,CONFIRMED,

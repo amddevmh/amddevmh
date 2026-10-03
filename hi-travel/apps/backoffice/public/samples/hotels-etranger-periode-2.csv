@@ -1,0 +1,4 @@
+Booking ref,Supplier,Hotel,City,Country,Guests,Rooms,Room type,Board,Check-in,Check-out,Cost,Currency,Status,Agency ref
+BOS-55120,Bosphorus DMC,Hôtel Sultanahmet Center,Istanbul,TR,1,1,Double,LPD,2026-11-14,2026-11-21,315.00,EUR,CONFIRMED,DOS-2026-00001
+BOS-55188,Bosphorus DMC,Hôtel Sultanahmet Center,Istanbul,TR,2,1,Double,LPD,2026-12-19,2026-12-26,320.00,EUR,CANCELLED,
+AHS-9002,Al Haram Services,Dar Al Iman InterContinental,Médine,SA,4,1,Quadruple,DP,2027-02-20,2027-02-25,2100.00,SAR,CONFIRMED,

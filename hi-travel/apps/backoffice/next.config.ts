@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: 'https', hostname: 'admin.hitravel.tn' }],
   },
   poweredByHeader: false,
+  // Imports de rapports et justificatifs (≤ 10 Mo)
+  experimental: { serverActions: { bodySizeLimit: '10mb' } },
 }
 
 export default nextConfig
