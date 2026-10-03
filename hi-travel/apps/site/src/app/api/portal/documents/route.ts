@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
   if (!check(bytes)) return NextResponse.json({ ok: false, error: u.content, field: 'file' }, { status: 415 })
 
   // Le dossier doit être visible par ce client (RLS)
-  const { data: dossier } = await supabase.from('dossiers').select('id').eq('id', meta.data.dossier_id).maybeSingle()
+  const { data: dossier } = await supabase.from('portal_dossiers').select('id').eq('id', meta.data.dossier_id).maybeSingle()
   if (!dossier) return NextResponse.json({ ok: false, error: t.portal.notFound }, { status: 404 })
 
   const path = `portal/${account.client_id}/${randomUUID()}-${safeName(file.name)}`

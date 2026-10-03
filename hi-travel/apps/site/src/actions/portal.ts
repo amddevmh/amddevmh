@@ -72,7 +72,7 @@ export async function startPayment(_prev: FormState, formData: FormData): Promis
   if (error || !intent) {
     return { status: 'error', error: error?.code === 'P0001' ? error.message : t.portal.notFound, fieldErrors: choice === 'other' ? { amount: error?.message ?? e.amount } : undefined }
   }
-  const { data: dossier } = await supabase.from('dossiers').select('reference').eq('id', dossier_id).single()
+  const { data: dossier } = await supabase.from('portal_dossiers').select('reference').eq('id', dossier_id).single()
 
   let checkoutUrl: string
   try {

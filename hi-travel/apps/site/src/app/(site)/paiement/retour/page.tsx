@@ -33,7 +33,7 @@ export default async function PaymentReturnPage({ searchParams }: Props) {
       </PortalShell>
     )
   }
-  const { data: dossier } = await supabase.from('dossiers').select('reference').eq('id', intent.dossier_id).maybeSingle()
+  const { data: dossier } = await supabase.from('portal_dossiers').select('reference').eq('id', intent.dossier_id).maybeSingle()
   const key = intent.status === 'created' ? 'pending' : intent.status
   const content = p.returnStatus[key] ?? p.returnStatus.pending!
   const tone = key === 'succeeded' ? 'success' : key === 'pending' ? 'info' : key === 'failed' ? 'danger' : 'warning'

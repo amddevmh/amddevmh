@@ -5,19 +5,20 @@ import { StatusBadge, buttonClass } from '@hi/ui'
 import { Icon } from '@/components/icons'
 import { PortalShell } from '@/components/portal-shell'
 import { t } from '@/lib/i18n'
-import { getPortalSession } from '@/lib/portal'
+import { getPortalSession, type PortalDossier } from '@/lib/portal'
 
 export const metadata: Metadata = { title: t.portal.title, robots: { index: false } }
 
 /** Tableau de bord : uniquement les dossiers du client connecté (RLS). */
 export default async function PortalHome() {
   const { supabase, email } = await getPortalSession('/espace-client')
-  const [{ data: dossiers }, { data: balances }] = await Promise.all([
-    supabase.from('dossiers')
+  const [{ data: dossierRows }, { data: balances }] = await Promise.all([
+    supabase.from('portal_dossiers')
       .select('id, reference, title, destination, start_date, end_date, status, total_price, currency')
       .order('start_date', { ascending: true, nullsFirst: false }),
     supabase.from('portal_dossier_balances').select('dossier_id, paid, balance'),
   ])
+  const dossiers = dossierRows as Array<Pick<PortalDossier, 'id' | 'reference' | 'title' | 'destination' | 'start_date' | 'end_date' | 'status' | 'total_price' | 'currency'>> | null
   const bal = new Map((balances ?? []).map((b) => [b.dossier_id, b]))
   const p = t.portal
   return (

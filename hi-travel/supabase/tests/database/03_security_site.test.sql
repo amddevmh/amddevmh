@@ -1,7 +1,7 @@
 -- Recette sécurité, site public, espace client, paiement en ligne, imports
 -- REC05, REC06, REC20, REC26, REC28, REC48, REC49, REC51, REC52
 begin;
-select plan(38);
+select plan(40);
 
 create temp table ctx (k text primary key, v uuid) on commit drop;
 grant all on ctx to authenticated, anon;
@@ -59,11 +59,13 @@ select ok((select margin_forecast is not null from public.dossier_financials whe
 
 -- ---------------------------------------------------------------- REC51 : espace client
 select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-000000000002","role":"authenticated"}', true);
-select is((select count(*)::int from public.dossiers), 0, 'REC51 : aucun accès aux dossiers d''un autre client');
+select is((select count(*)::int from public.portal_dossiers), 0, 'REC51 : aucun accès aux dossiers d''un autre client');
 select is((select count(*)::int from public.dossiers where id = (select v from ctx where k = 'dossier')), 0, 'REC51 : accès direct par identifiant refusé');
 select is((select count(*)::int from public.documents), 0, 'REC51 : aucun document d''un autre client');
 select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-000000000001","role":"authenticated"}', true);
-select is((select count(*)::int from public.dossiers), 1, 'Client : son dossier est visible');
+select is((select count(*)::int from public.portal_dossiers), 1, 'Client : son dossier est visible (vue client)');
+select is((select count(*)::int from public.dossiers), 0, 'Client : aucune lecture directe des colonnes internes du dossier');
+select is((select count(*)::int from public.payments), 0, 'Client : règlements lus uniquement via la vue client');
 select is((select count(*)::int from public.documents), 1, 'Client : seul le document publié est visible (passeport interne exclu)');
 select is((select count(*)::int from public.services), 0, 'Client : coûts fournisseurs jamais visibles');
 select is((select balance from public.portal_dossier_balances where dossier_id = (select v from ctx where k = 'dossier')), 1890.000, 'Client : solde de son dossier');

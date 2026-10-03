@@ -8,7 +8,7 @@ import { PaymentForm, type PayChoice } from '@/components/portal-forms'
 import { PortalShell } from '@/components/portal-shell'
 import { todayTunis } from '@/lib/forms'
 import { t } from '@/lib/i18n'
-import { getPortalSession, scheduleWithStatus } from '@/lib/portal'
+import { getPortalSession, scheduleWithStatus, type PortalDossier } from '@/lib/portal'
 
 export const metadata: Metadata = { title: t.payment.title, robots: { index: false } }
 
@@ -19,7 +19,8 @@ export default async function PaymentPage({ params }: Props) {
   const { id } = await params
   if (!z.guid().safeParse(id).success) notFound()
   const { supabase, email } = await getPortalSession(`/espace-client/dossiers/${id}/paiement`)
-  const { data: dossier } = await supabase.from('dossiers').select('id, reference, title, status, currency').eq('id', id).maybeSingle()
+  const { data: dossierRow } = await supabase.from('portal_dossiers').select('id, reference, title, status, currency').eq('id', id).maybeSingle()
+  const dossier = dossierRow as Pick<PortalDossier, 'id' | 'reference' | 'title' | 'status' | 'currency'> | null
   if (!dossier) notFound()
   const [{ data: bal }, { data: items }, { data: opts }] = await Promise.all([
     supabase.from('portal_dossier_balances').select('paid, balance').eq('dossier_id', id).maybeSingle(),

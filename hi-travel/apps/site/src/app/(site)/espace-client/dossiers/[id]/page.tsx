@@ -11,7 +11,7 @@ import { ChangeRequestForm, UploadForm } from '@/components/portal-forms'
 import { PortalShell } from '@/components/portal-shell'
 import { todayTunis } from '@/lib/forms'
 import { t } from '@/lib/i18n'
-import { getPortalSession, scheduleWithStatus } from '@/lib/portal'
+import { getPortalSession, scheduleWithStatus, type PortalDossier } from '@/lib/portal'
 
 export const metadata: Metadata = { title: t.portal.dossier, robots: { index: false } }
 
@@ -38,11 +38,12 @@ export default async function DossierPage({ params }: Props) {
   const p = t.portal
 
   // RLS : un client ne lit que ses propres dossiers (un autre identifiant renvoie « introuvable »)
-  const { data: dossier } = await supabase
-    .from('dossiers')
+  const { data: dossierRow } = await supabase
+    .from('portal_dossiers')
     .select('id, reference, title, destination, activity, start_date, end_date, status, total_price, currency, adults, children, infants, departure_id')
     .eq('id', id)
     .maybeSingle()
+  const dossier = dossierRow as PortalDossier | null
   if (!dossier) notFound()
 
   const [balanceRes, summaryRes, scheduleRes, docsRes, invoicesRes, intentsRes, optionsRes] = await Promise.all([
@@ -54,13 +55,12 @@ export default async function DossierPage({ params }: Props) {
     supabase.from('payment_intents').select('id, amount, currency, status, created_at').eq('dossier_id', id).order('created_at', { ascending: false }).limit(5),
     supabase.rpc('portal_payment_options'),
   ])
-  const invoiceIds = (invoicesRes.data ?? []).map((i) => i.id)
-  const allocFilter = invoiceIds.length ? `dossier_id.eq.${id},invoice_id.in.(${invoiceIds.join(',')})` : `dossier_id.eq.${id}`
+  // Règlements via la vue client (sans clé d'idempotence ni notes internes)
   const { data: allocations } = await supabase
-    .from('payment_allocations')
-    .select('id, amount, payment:payments!inner(reference, received_at, method, status)')
-    .or(allocFilter)
-    .order('created_at')
+    .from('portal_payments')
+    .select('id, reference, received_at, method, allocated')
+    .eq('dossier_id', id)
+    .order('received_at')
 
   // Programme : offre publique associée au départ, si elle est publiée
   let program: Array<{ day: number; title: string; description?: string }> = []
@@ -163,15 +163,14 @@ export default async function DossierPage({ params }: Props) {
           <Card title={p.payments} id="payments">
             {(allocations ?? []).length === 0 ? <p className="text-sm text-muted">{p.noPayments}</p> : (
               <ul className="divide-y divide-line text-sm">
-                {(allocations ?? []).map((a) => {
-                  const pay = a.payment as unknown as { reference: string; received_at: string; method: string }
+                {(allocations ?? []).map((a, idx) => {
                   return (
-                    <li key={a.id} className="flex items-center justify-between gap-3 py-2.5">
+                    <li key={`${a.id}-${idx}`} className="flex items-center justify-between gap-3 py-2.5">
                       <span>
-                        <span className="font-medium">{formatDateFr(pay.received_at)}</span>
-                        <span className="text-muted"> · {paymentMethodLabels[pay.method] ?? pay.method} · {pay.reference}</span>
+                        <span className="font-medium">{formatDateFr(a.received_at)}</span>
+                        <span className="text-muted"> · {a.method ? paymentMethodLabels[a.method] ?? a.method : ''} · {a.reference}</span>
                       </span>
-                      <span className="font-semibold tabular">{formatMoney(a.amount, dossier.currency)}</span>
+                      <span className="font-semibold tabular">{formatMoney(a.allocated, dossier.currency)}</span>
                     </li>
                   )
                 })}

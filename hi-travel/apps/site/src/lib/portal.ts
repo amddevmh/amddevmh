@@ -1,7 +1,13 @@
 import 'server-only'
 import { cache } from 'react'
 import { redirect } from 'next/navigation'
+import type { Tables } from '@hi/db'
 import { createSessionClient } from './supabase'
+
+/** Ligne de la vue `portal_dossiers` (colonnes publiables ; les vues sont typées nullables par le générateur). */
+export type PortalDossier = Pick<Tables<'dossiers'>,
+  'id' | 'reference' | 'title' | 'activity' | 'is_omra' | 'destination' | 'start_date' | 'end_date' | 'status'
+  | 'total_price' | 'currency' | 'adults' | 'children' | 'infants' | 'departure_id' | 'created_at'>
 
 /**
  * Session de l'espace client. Le proxy fait un contrôle optimiste ; ici on vérifie l'utilisateur
