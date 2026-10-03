@@ -1,0 +1,12 @@
+**/node_modules
+**/.next
+**/.next-*
+**/.turbo
+**/.env*
+!**/.env.example
+.payment-secret.local
+test-results
+playwright-report
+e2e
+supabase/.temp
+supabase/.branches
