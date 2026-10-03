@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { roleLabels } from '@hi/core'
 import { Sidebar } from '@/components/sidebar'
 import { requireStaff } from '@/lib/auth'
@@ -17,10 +18,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <Sidebar items={visible(NAV)} />
       <div className="min-w-0 flex-1">
         <div className="sticky top-14 z-20 flex h-14 items-center justify-end gap-4 border-b border-line bg-white/90 px-4 backdrop-blur lg:top-0 lg:px-8">
-          <div className="text-right leading-tight">
+          <Link href="/compte" title="Mon compte : profil et mot de passe" className="rounded-lg px-2 py-1 text-right leading-tight hover:bg-brand-50">
             <p className="text-sm font-medium text-brand-900">{session.profile.full_name}</p>
-            <p className="text-xs text-muted">{roleLabels[session.profile.role]}</p>
-          </div>
+            <p className="text-xs text-muted">{roleLabels[session.profile.role]} · Mon compte</p>
+          </Link>
           <form action={signOut}>
             <button type="submit" className="rounded-lg px-3 py-1.5 text-sm text-brand-700 ring-1 ring-line hover:bg-brand-50">Déconnexion</button>
           </form>

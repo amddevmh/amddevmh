@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { dossierStatusLabels, formatDateFr, label, leadSourceLabels, leadStageLabels, quoteStatusLabels } from '@hi/core'
+import { createAdminClient } from '@hi/db/admin'
 import { Alert, Badge, DefinitionList, EmptyState, Field, Input, Select, StatusBadge, Table, Td, Textarea, Th, buttonClass } from '@hi/ui'
 import { PageHeader } from '@/components/page'
 import { AuditList } from '@/components/ops/audit-list'
+import { ClientAccessCard, type ClientAccessAccount } from '@/components/ops/client-access-card'
 import { InteractionsList } from '@/components/ops/interactions'
 import { OpsForm, OpsSubmit } from '@/components/ops/ops-form'
 import { TravellerFields } from '@/components/ops/traveller-fields'
@@ -42,6 +44,8 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
   const consents = (c.consents ?? {}) as Record<string, unknown>
   const dups = (dupResult.data ?? []).filter((d) => d.id !== id && d.match_reason)
   const canUpdate = session.can('crm', 'update')
+  const accounts = await clientAccessAccounts(supabase, id, canUpdate)
+  const portalUrl = `${(process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '')}/espace-client/connexion`
 
   return (
     <>
@@ -120,6 +124,10 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
             </ul>
           </Section>
         </div>
+
+        <Section title="Accès à l’espace client" description="Identifiant de connexion du client au site (suivi de ses dossiers, documents et paiements).">
+          <ClientAccessCard clientId={c.id} clientEmail={c.email} accounts={accounts} canManage={canUpdate && !c.merged_into_id} portalUrl={portalUrl} />
+        </Section>
 
         {c.kind === 'company' || (contacts.data?.length ?? 0) > 0 ? (
           <Section title="Contacts">
@@ -261,4 +269,20 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
       </div>
     </>
   )
+}
+
+/**
+ * Comptes de l’espace client rattachés à la fiche (RLS). L’identifiant de connexion est lu dans
+ * auth.users avec la clé service, uniquement pour les détenteurs de crm.update (contrôlé ci-dessus).
+ */
+async function clientAccessAccounts(supabase: Awaited<ReturnType<typeof db>>, clientId: string, canUpdate: boolean): Promise<ClientAccessAccount[]> {
+  const { data } = await supabase.from('client_accounts').select('user_id, created_at').eq('client_id', clientId).order('created_at')
+  const rows = data ?? []
+  if (!canUpdate || rows.length === 0) return rows.map((r) => ({ userId: r.user_id, email: null, createdAt: r.created_at }))
+  await requireStaff('crm', 'update')
+  const admin = createAdminClient()
+  return Promise.all(rows.map(async (r) => {
+    const { data: u } = await admin.auth.admin.getUserById(r.user_id)
+    return { userId: r.user_id, email: u.user?.email ?? null, createdAt: r.created_at, lastSignInAt: u.user?.last_sign_in_at ?? null }
+  }))
 }

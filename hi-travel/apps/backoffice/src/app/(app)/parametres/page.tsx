@@ -1,12 +1,14 @@
 import { roleLabels } from '@hi/core'
 import { createClient } from '@hi/db/server'
 import { Badge, Card, CardBody, CardHeader, DateText, Field, Input, Select, Table, Td, Th } from '@hi/ui'
+import Link from 'next/link'
 import { ActionForm, SubmitButton } from '@/components/forms'
+import { PasswordResetForm } from '@/components/password-tools'
 import { PageHeader } from '@/components/page'
 import { SettingsTabs } from '@/components/admin/settings-tabs'
 import { requireStaff } from '@/lib/auth'
 import { ROLES } from '@/lib/admin/permissions'
-import { createStaffUser, updateStaff } from './actions'
+import { createStaffUser, resetStaffPassword, updateStaff } from './actions'
 
 export const metadata = { title: 'Paramètres — utilisateurs' }
 
@@ -26,7 +28,7 @@ export default async function UsersPage() {
         <Card className="xl:col-span-2">
           <CardHeader title="Collaborateurs" description="Un compte désactivé ne peut plus se connecter ; ses sessions sont révoquées. L’historique est conservé." />
           <Table>
-            <thead><tr><Th>Collaborateur</Th><Th>Rôle</Th><Th>Suppléant</Th><Th>Statut</Th><Th>Créé le</Th>{canEdit ? <Th>Modifier</Th> : null}</tr></thead>
+            <thead><tr><Th>Collaborateur</Th><Th>Rôle</Th><Th>Suppléant</Th><Th>Statut</Th><Th>Créé le</Th>{canEdit ? <Th>Actions</Th> : null}</tr></thead>
             <tbody>
               {people.map((s) => (
                 <tr key={s.id} className={s.active ? undefined : 'opacity-60'}>
@@ -52,6 +54,21 @@ export default async function UsersPage() {
                           <SubmitButton size="sm" confirm="Appliquer ces changements au compte ?">Enregistrer</SubmitButton>
                         </ActionForm>
                       </details>
+                      {s.id === session.userId ? (
+                        <Link href="/compte" className="mt-1 block text-xs text-brand-600 hover:underline">Mot de passe : utilisez Mon compte</Link>
+                      ) : (
+                        <details className="mt-1">
+                          <summary className="cursor-pointer text-xs text-brand-600">Réinitialiser le mot de passe</summary>
+                          <div className="mt-2 w-64 max-w-full">
+                            <PasswordResetForm
+                              action={resetStaffPassword}
+                              hidden={{ id: s.id }}
+                              idPrefix={`staff-${s.id}`}
+                              confirm={`Remplacer le mot de passe de ${s.full_name} ? L’ancien ne fonctionnera plus.`}
+                            />
+                          </div>
+                        </details>
+                      )}
                     </Td>
                   ) : null}
                 </tr>

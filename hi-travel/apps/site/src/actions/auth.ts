@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { createSessionClient } from '@/lib/supabase'
+import { createPublicClient, createSessionClient } from '@/lib/supabase'
 import { safeNext, siteUrl } from '@/lib/portal'
 import type { FormState } from '@/lib/forms'
 import { t } from '@/lib/i18n'
@@ -47,7 +47,7 @@ export async function requestPasswordReset(_prev: FormState, formData: FormData)
 export async function updatePassword(_prev: FormState, formData: FormData): Promise<FormState> {
   const password = String(formData.get('password') ?? '')
   const confirm = String(formData.get('confirm') ?? '')
-  if (password.length < 10) return { status: 'error', fieldErrors: { password: p.passwordShort }, error: p.passwordShort }
+  if (password.length < 12) return { status: 'error', fieldErrors: { password: p.passwordShort }, error: p.passwordShort }
   if (password !== confirm) return { status: 'error', fieldErrors: { confirm: p.passwordMismatch }, error: p.passwordMismatch }
   const supabase = await createSessionClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -55,4 +55,38 @@ export async function updatePassword(_prev: FormState, formData: FormData): Prom
   const { error } = await supabase.auth.updateUser({ password })
   if (error) return { status: 'error', error: error.message.includes('different') ? 'Choisissez un mot de passe différent de l’ancien.' : p.linkInvalid }
   return { status: 'success', message: p.passwordSaved }
+}
+
+/**
+ * Changement de mot de passe depuis l'espace client : vérification du mot de passe actuel sur un
+ * client Supabase sans cookies (la session en cours n'est pas remplacée), puis mise à jour avec la session.
+ */
+export async function changePassword(_prev: FormState, formData: FormData): Promise<FormState> {
+  const cp = p.changePassword
+  const current = String(formData.get('current') ?? '')
+  const password = String(formData.get('password') ?? '')
+  const confirm = String(formData.get('confirm') ?? '')
+  if (!current) return { status: 'error', fieldErrors: { current: cp.currentRequired }, error: cp.currentRequired }
+  if (password.length < 12) return { status: 'error', fieldErrors: { password: p.passwordShort }, error: p.passwordShort }
+  if (password.length > 72) return { status: 'error', fieldErrors: { password: cp.failed }, error: cp.failed }
+  if (password !== confirm) return { status: 'error', fieldErrors: { confirm: p.passwordMismatch }, error: p.passwordMismatch }
+  if (password === current) return { status: 'error', fieldErrors: { password: cp.sameAsCurrent }, error: cp.sameAsCurrent }
+
+  const supabase = await createSessionClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user?.email) redirect('/espace-client/connexion?next=%2Fespace-client%2Fmot-de-passe')
+  const { data: account } = await supabase.from('client_accounts').select('client_id').eq('user_id', user.id).maybeSingle()
+  if (!account) return { status: 'error', error: p.notClient }
+
+  const verifier = createPublicClient()
+  const { data: check, error: checkError } = await verifier.auth.signInWithPassword({ email: user.email, password: current })
+  if (checkError || !check.session) return { status: 'error', fieldErrors: { current: cp.currentWrong }, error: cp.currentWrong }
+  await verifier.auth.signOut({ scope: 'local' })
+
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) {
+    const msg = error.code === 'same_password' ? cp.sameAsCurrent : cp.failed
+    return { status: 'error', error: msg }
+  }
+  return { status: 'success', message: cp.saved }
 }

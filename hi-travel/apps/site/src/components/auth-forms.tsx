@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { Alert, Button, Input } from '@hi/ui'
-import { login, requestPasswordReset, updatePassword } from '@/actions/auth'
+import { changePassword, login, requestPasswordReset, updatePassword } from '@/actions/auth'
 import { idleState } from '@/lib/forms'
 import { t } from '@/lib/i18n'
 import { FormField, a11yProps } from './form-field'
@@ -63,12 +63,42 @@ export function NewPasswordForm() {
     <form action={action} className="space-y-5">
       {state.status === 'error' && !fe ? <Alert tone="danger">{state.error}</Alert> : null}
       <FormField id="np-password" label={p.newPassword} required hint={p.passwordHint} error={fe?.password}>
-        <Input name="password" type="password" autoComplete="new-password" minLength={10} required {...a11yProps('np-password', fe?.password, p.passwordHint)} />
+        <Input name="password" type="password" autoComplete="new-password" minLength={12} required {...a11yProps('np-password', fe?.password, p.passwordHint)} />
       </FormField>
       <FormField id="np-confirm" label={p.confirmPassword} required error={fe?.confirm}>
-        <Input name="confirm" type="password" autoComplete="new-password" minLength={10} required {...a11yProps('np-confirm', fe?.confirm)} />
+        <Input name="confirm" type="password" autoComplete="new-password" minLength={12} required {...a11yProps('np-confirm', fe?.confirm)} />
       </FormField>
       <Button type="submit" size="lg" className="w-full" disabled={pending}>{p.newPasswordTitle}</Button>
+    </form>
+  )
+}
+
+/** Changement de mot de passe d'un client connecté (mot de passe actuel exigé). */
+export function ChangePasswordForm() {
+  const [state, action, pending] = useActionState(changePassword, idleState)
+  const cp = p.changePassword
+  if (state.status === 'success') {
+    return (
+      <div className="space-y-4">
+        <Alert tone="success">{state.message}</Alert>
+        <Link href="/espace-client" className="font-medium text-brand-600 hover:underline">{p.myDossiers}</Link>
+      </div>
+    )
+  }
+  const fe = state.status === 'error' ? state.fieldErrors : undefined
+  return (
+    <form action={action} className="space-y-5">
+      {state.status === 'error' ? <Alert tone="danger">{state.error}</Alert> : null}
+      <FormField id="cp-current" label={cp.current} required error={fe?.current}>
+        <Input name="current" type="password" autoComplete="current-password" required {...a11yProps('cp-current', fe?.current)} />
+      </FormField>
+      <FormField id="cp-password" label={p.newPassword} required hint={p.passwordHint} error={fe?.password}>
+        <Input name="password" type="password" autoComplete="new-password" minLength={12} required {...a11yProps('cp-password', fe?.password, p.passwordHint)} />
+      </FormField>
+      <FormField id="cp-confirm" label={p.confirmPassword} required error={fe?.confirm}>
+        <Input name="confirm" type="password" autoComplete="new-password" minLength={12} required {...a11yProps('cp-confirm', fe?.confirm)} />
+      </FormField>
+      <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={pending}>{pending ? cp.submitting : cp.submit}</Button>
     </form>
   )
 }

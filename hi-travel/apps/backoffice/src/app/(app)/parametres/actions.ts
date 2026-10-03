@@ -10,6 +10,7 @@ import { requireStaff } from '@/lib/auth'
 import { fromDbError, fromZod, formToObject, type ActionState } from '@/lib/actions'
 import { MODULES, ACTIONS, ROLES } from '@/lib/admin/permissions'
 import { parseAmount } from '@/lib/fin/format'
+import { authErrorMessage, PASSWORD_MIN, type PasswordActionState } from '@/lib/password'
 
 // ---------------------------------------------------------------------------
 // Utilisateurs
@@ -69,6 +70,28 @@ export async function updateStaff(_: ActionState, formData: FormData): Promise<A
   }
   revalidatePath('/parametres')
   return { ok: true, message: before && before.active && !v.active ? 'Compte désactivé et sessions révoquées' : 'Collaborateur mis à jour' }
+}
+
+/**
+ * Réinitialisation du mot de passe d’un collaborateur par la direction (settings.update).
+ * Son propre mot de passe se change depuis « Mon compte » (vérification du mot de passe actuel).
+ */
+export async function resetStaffPassword(_: PasswordActionState, formData: FormData): Promise<PasswordActionState> {
+  const session = await requireStaff('settings', 'update')
+  const parsed = z.object({
+    id: z.guid(),
+    password: z.string().min(PASSWORD_MIN, `${PASSWORD_MIN} caractères minimum`).max(72, '72 caractères maximum'),
+  }).safeParse(formToObject(formData))
+  if (!parsed.success) return fromZod(parsed)
+  const v = parsed.data
+  if (v.id === session.userId) return { ok: false, error: 'Pour votre propre compte, utilisez « Mon compte » (le mot de passe actuel y est demandé).' }
+  const supabase = await createClient()
+  const { data: target } = await supabase.from('staff_profiles').select('id, full_name, email').eq('id', v.id).maybeSingle()
+  if (!target) return { ok: false, error: 'Collaborateur introuvable' }
+  const admin = createAdminClient()
+  const { error } = await admin.auth.admin.updateUserById(v.id, { password: v.password })
+  if (error) return { ok: false, error: authErrorMessage(error, 'Réinitialisation impossible') }
+  return { ok: true, message: `Mot de passe de ${target.full_name} réinitialisé`, password: v.password, email: target.email, issuedAt: Date.now() }
 }
 
 // ---------------------------------------------------------------------------

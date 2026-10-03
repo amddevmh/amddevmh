@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { logout } from '@/actions/auth'
 import { t } from '@/lib/i18n'
@@ -14,11 +15,16 @@ export function PortalShell({ email, crumbs, title, children, actions }: { email
             <Icon name="user" className="size-4 text-brand-500" />
             <span>{t.portal.title} · <span className="font-medium text-ink" data-testid="portal-email">{email}</span></span>
           </p>
-          <form action={logout}>
-            <button type="submit" className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-brand-700 hover:bg-brand-50">
-              <Icon name="arrowRight" className="size-4" /> {t.portal.logout}
-            </button>
-          </form>
+          <div className="flex flex-wrap items-center gap-1">
+            <Link href="/espace-client/mot-de-passe" className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-brand-700 hover:bg-brand-50">
+              <Icon name="lock" className="size-4" /> {t.portal.changePassword.link}
+            </Link>
+            <form action={logout}>
+              <button type="submit" className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium text-brand-700 hover:bg-brand-50">
+                <Icon name="arrowRight" className="size-4" /> {t.portal.logout}
+              </button>
+            </form>
+          </div>
         </Container>
       </div>
       <Container className="py-8">
