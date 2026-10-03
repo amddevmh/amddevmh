@@ -115,6 +115,34 @@ Run the end-to-end tests after `pnpm build` and on a freshly reset database; the
 
 The two supplier names were inferred from hotel image URLs on hitravel.tn; both connectors are placeholders until HI Travel shares the API documentation (API01). Failure modes can be demonstrated from **Connexions et imports → API hôtels** (scenario: down, slow, timeout on booking, price change).
 
+## Demo data (staging)
+
+Staging runs on a rich, reloadable demo data set: `supabase/seed.sql` (base) plus `supabase/demo/demo.sql` (demo pack). Dates are relative to the day the data is loaded, so urgencies, departures and deadlines stay meaningful.
+
+```bash
+pnpm demo:staging     # SUPABASE_ACCESS_TOKEN required — wipes staging and reloads the demo (files included)
+pnpm demo:local       # same on the local stack
+```
+
+The script (`scripts/demo-data.mjs`) does the following:
+1. Empties the private `documents` bucket.
+2. Runs `supabase/demo/reset.sql`, which deletes all business data **and all accounts** but keeps reference data (rights, chart of accounts, templates, settings).
+3. Loads the base seed and the demo pack in a single transaction.
+4. Uploads a generated PDF for every document so downloads work.
+
+It refuses any remote project whose name doesn't contain "staging", so production can't be wiped by mistake. The pgTAP tests (`pnpm db:test`) run on the base seed only (`pnpm db:reset`), not on the demo pack.
+
+| Content | Detail |
+|---|---|
+| 12 dossiers covering the 9 activities | API hotel (confirmed, with a 300 DT online payment and a refused one), Schengen visa (checklist, appointment in 3 days), flight tickets (issue deadline in 20 h), 80-person MICE seminar (participants, under-capacity bus, MyGo booking "à vérifier"), Omra group (cheque deposited, bill not yet due), Sud circuit (departure full), Rome trip in progress (complaint, vehicle conflict with another dossier's transfer), Djerba trip completed and ready for financial closing, old Sousse dossier closed and archived, cancelled Paris trip (credit note and refund), Istanbul reference dossier (draft invoice) |
+| Quotes | 15, including a Dubai quote in 2 versions, a draft, a refusal (lost lead) |
+| CRM | 9 extra clients, a company with contacts, a probable duplicate, leads at every pipeline stage |
+| Finance | invoices, pro forma, credit note, transfer/cash/card/cheque/bill payments, a rejected cheque, a deposit slip, an internal transfer, a cash closing, 5 supplier invoices (EUR 60/40 split, split by passengers, justified duplicate), a partial supplier payment |
+| Accounting | 31 validated entries, 4 left in the brouillard (including an unbalanced one to show the refusal), previous fiscal year closed |
+| Operations | 21 tasks (red, orange, planned, waiting, blocked, done, unassigned, manual priority), pre-departure checks, supplier deadlines, 6 alerts in every state, outbox messages, a ticketing import committed + one in preview |
+| Site | offers in review, draft and hidden next to the published ones |
+| Accounts | the 5 roles + commercial2@hitravel.test; clients client@ (2 dossiers incl. archived history), client2@ (none — isolation), client3@ (confirmed hotel stay, online payment) |
+
 ## Environments (Railway + Supabase)
 
 | Environment | Public site | Back office | Supabase project | Data |
